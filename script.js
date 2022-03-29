@@ -33,7 +33,7 @@ const animIntroData = [
    {frameX: 877, frameY: 16},
 ]
 
-const andimIdleData = [
+const animIdleData = [
     {frameX: 12, frameY: 120},
     {frameX: 75, frameY: 120},
     {frameX: 138, frameY: 120},
@@ -42,6 +42,14 @@ const andimIdleData = [
     {frameX: 326, frameY: 120},
 ]
 
+const animHitstunLightData = [
+    {frameX: 12, frameY: 120},
+    {frameX: 75, frameY: 120},
+    {frameX: 138, frameY: 120},
+    {frameX: 202, frameY: 120},
+    {frameX: 263, frameY: 120},
+    {frameX: 326, frameY: 120},
+]
 // drawFrame(334 , 16, 0, 0,),
 // drawFrame(395, 16, scaledWidth, 0,),
 // drawFrame(456, 16, scaledWidth * 2, 0,),
@@ -53,27 +61,50 @@ const andimIdleData = [
 // drawFrame(819, 16, scaledWidth * 8, 0,),
 // drawFrame(877, 16, scaledWidth * 9, 0,),
 function init() {
-    window.requestAnimationFrame(step);
+    window.requestAnimationFrame(stepIntro);
   }
 
   let currentLoopIndex = 0;
   let frameCount = 0;
 
-function step() {
+  function stepIntro() {
     frameCount++;
-    if(frameCount < 12){
-        window.requestAnimationFrame(step);
+    //control speed
+    if(frameCount < 6){
+        window.requestAnimationFrame(stepIntro);
         return
     }
     frameCount = 0;
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    drawFrame(animIntroData[currentLoopIndex].frameX, 
+    ctx.clearRect(0,0, canvas.width, canvas.height);
+    drawFrame(animIntroData[currentLoopIndex].frameX,
         animIntroData[currentLoopIndex].frameY, 0, 0);
     currentLoopIndex++;
-    if (currentLoopIndex >= animIntroData.length) {
+    if(currentLoopIndex < animIntroData.length) {
+    window.requestAnimationFrame(stepIntro)
+    console.log("hello")
+    }else {
+        currentLoopIndex = 0;
+        window.requestAnimationFrame(stepIdle)
+        return
+    }
+  }
+
+  function stepIdle() {
+    frameCount++;
+    //control speed
+    if(frameCount < 6){
+        window.requestAnimationFrame(stepIdle);
+        return
+    }
+    // execute frame after frame count is over
+    frameCount = 0;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawFrame(animIdleData[currentLoopIndex].frameX, 
+        animIdleData[currentLoopIndex].frameY, 0, 0);
+    currentLoopIndex++;
+    if (currentLoopIndex >= animIdleData.length) {
       currentLoopIndex = 0;
     }
-    window.requestAnimationFrame(step);
+    window.requestAnimationFrame(stepIdle);
 }
 
-window.requestAnimationFrame(step);
